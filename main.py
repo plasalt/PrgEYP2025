@@ -22,6 +22,8 @@ cards = {
 
 }
 
+sortcycles = ["strength","speed","stealth","cunning","total score"]
+sortcurrent = 0
 
 root = tk.Tk()
 
@@ -46,7 +48,7 @@ def addbutton():
         return
     
     # if not creates a temp data for the user to change
-    cards[idx] = {"name":"","strength":1,"speed":1,"stealth":1,"cunning":1}
+    cards[idx] = {"name":"","strength":1,"speed":1,"stealth":1,"cunning":1,"total score":4}
     
 
     #loads the correct frame
@@ -118,6 +120,9 @@ def preview():
     else:
         cards[idx]["cunning"]= int(cunninginput.get())
 
+    if nameinput.get() == "":
+        messagebox.showerror("Monster Card Catalogue","No name is present")
+        return
     #sets the name to the name and sets lock to false
     cards[idx]["name"] = nameinput.get()
     cards[idx]["lock"] = False
@@ -125,6 +130,7 @@ def preview():
     #set the correct frame
     addframe.pack_forget()
     previewframe.pack(fill="both",expand=True)
+
 
     #set the correct outputs for the user to check and make sure they are all correct
     nameresult.config(text=cards[idx]["name"])
@@ -184,6 +190,7 @@ def deletecard():
         return
 
     del cards[idx]
+    buttons[idx].config(image=imagearrey["empty"])
 
     buttons[idx].config(text="empty")
     selectedcard.config(text="selected card\nempty")
@@ -196,6 +203,39 @@ def backmenu():
 def sort_cards(cards, stat, reverse=True):
     sorted_items = sorted(cards.values(), key=lambda x: x[stat], reverse=reverse)
     return {i: card for i, card in enumerate(sorted_items)}
+
+
+def sortpress():
+    global sortcurrent
+    for idx in cards:
+        cards[idx]["total score"] = (cards[idx]["cunning"]+cards[idx]["stealth"]+cards[idx]["speed"]+cards[idx]["strength"])
+    if sortcurrent == 0:
+        sortcurrent += 1
+        sortbutton.config(text=sortcycles[sortcurrent-1])
+        sortcurrent += 1
+        sorter()
+        return
+    if sortcurrent >= 6:
+        print("reset")
+        sortcurrent = 1          
+        sortbutton.config(text=sortcycles[sortcurrent-1])
+        sortcurrent += 1
+    else:  
+        sortbutton.config(text=sortcycles[sortcurrent-1])
+        sortcurrent += 1
+    sorter()
+
+def sorter():
+    global cards
+    print(sortcycles[sortcurrent-2])
+    cards = sort_cards(cards,sortcycles[sortcurrent-2])
+    for idx in cards:
+        print(cards[idx])
+        buttons[idx].config(text=cards[idx]["name"])
+        buttons[idx].config(image=imagearrey[cards[idx]["image"]])
+
+    
+        
 
 
 #code setup
@@ -222,8 +262,11 @@ for filename in os.listdir(folder_path):
 
 def imagecombo(event):
     imagelaabel.config(image=imagearrey[imageselecter.get()])
-    cards[idx]["image"] = [imageselecter.get()]
+    cards[idx]["image"] = imageselecter.get()
     buttons[idx].config(image=imagearrey[imageselecter.get()])
+    previewimagelabel.config(image=imagearrey[imageselecter.get()])
+
+
 
 #code 
 mainframe = tk.Frame(root,bg="#1f57a2",width=670,height=220)
@@ -236,7 +279,7 @@ main2frame.pack(fill="both",expand=True)
 title = tk.Label(mainframe,text="Monster Card Catalogue",bg="#1f57a2",font=("Anton",30,"bold"))
 title.grid(row=0,column=0,columnspan=5)
 
-sortbutton = tk.Button(mainframe,text="sort",width=10,height=1)
+sortbutton = tk.Button(mainframe,text="sort",width=10,height=1,command=sortpress)
 sortbutton.grid(row=1,column=0)
 
 i=0
@@ -344,6 +387,8 @@ backbutton = tk.Button(previewframe,text="Back to edit",width=10,height=1,relief
 backbutton.place(x=150,y=300)
 savebutton = tk.Button(previewframe,text="Save Card",width=10,height=1,relief='flat',font=("Anton",20,"bold"),command=saving)
 savebutton.place(x=350,y=300)
+previewimagelabel = tk.Label(previewframe,image=imagearrey["empty"])
+previewimagelabel.place(x=120,y=130)
 
 viewframe = tk.Frame(root,bg="#1f57a2",width=670,height=350)
 
