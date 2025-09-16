@@ -266,6 +266,18 @@ def imagecombo(event):
     buttons[idx].config(image=imagearrey[imageselecter.get()])
     previewimagelabel.config(image=imagearrey[imageselecter.get()])
 
+def printbutton():
+    with open("test.txt", "w") as f:
+       for each in cards:
+           f.write(f"{cards[each]}\n")
+    readfromfile()
+
+def readfromfile():
+    with open("test.txt", "r") as f:
+        for line in f: 
+            cards[f] = line
+
+
 
 
 #code 
@@ -309,7 +321,7 @@ viewcard = tk.Button(main2frame,text="view card",width=10,height=2,relief='flat'
 viewcard.grid(row=0,column=3,padx=14,pady=10)
 selectedcard = tk.Label(main2frame,text="selected card\n",font=("Anton",8,"bold"),width=12,height=2)
 selectedcard.grid(row=0,column=4,padx=12,pady=10)
-printcard = tk.Button(main2frame,text="print card",width=10,height=2,relief='flat',font=("Anton",8,"bold"))
+printcard = tk.Button(main2frame,text="print card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=printbutton)
 printcard.grid(row=0,column=5,padx=12,pady=10)
 
 addframe = tk.Frame(root,bg="#1f57a2",width=670,height=350)

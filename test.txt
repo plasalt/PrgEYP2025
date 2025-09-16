@@ -1,0 +1,27 @@
+{'name': 'Vexscream', 'strength': 1, 'speed': 6, 'stealth': 21, 'cunning': 19, 'lock': True, 'image': 'vexscream'}
+{'name': 'Dawnmirage', 'strength': 5, 'speed': 15, 'stealth': 18, 'cunning': 22, 'lock': True, 'image': 'dawnmirage'}
+{'name': 'Blazegolem', 'strength': 15, 'speed': 20, 'stealth': 23, 'cunning': 6, 'lock': True, 'image': 'blazegolem'}
+{'name': 'Moldvine', 'strength': 21, 'speed': 18, 'stealth': 14, 'cunning': 5, 'lock': True, 'image': 'moldvine'}
+{'name': 'Vortexwing', 'strength': 19, 'speed': 13, 'stealth': 19, 'cunning': 2, 'lock': True, 'image': 'vortexwing'}
+{'name': 'Froststep', 'strength': 14, 'speed': 14, 'stealth': 17, 'cunning': 4, 'lock': True, 'image': 'froststep'}
+{'name': 'Wispghoul', 'strength': 17, 'speed': 19, 'stealth': 3, 'cunning': 2, 'lock': True, 'image': 'wispghoul'}
+{'name': 'Wispghoul', 'strength': 17, 'speed': 19, 'stealth': 3, 'cunning': 2, 'lock': True, 'image': 'wispghoul'}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
