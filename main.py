@@ -1,11 +1,14 @@
 #imports
 import tkinter as tk
 from tkinter import ttk 
-import PIL as pillow
 from PIL import Image,ImageTk
 from tkinter import messagebox
 import os 
+import json
 
+MAXSTAT = 25
+MINSTAT = 1
+MAXCARDS =10 
 
 #arrey to hold the buttons
 buttons = []
@@ -92,31 +95,31 @@ def editbutton():
 def preview():
 
     #checks if a value is either 25 > or < 0 and sets them to their upper and lower limits else it just sets them normally
-    if int(strengthinput.get()) > 25:
-        cards[idx]["strength"] = 25
-    elif int(strengthinput.get()) ==  0:
-        cards[idx]["strength"] = 1
+    if int(strengthinput.get()) > MAXSTAT:
+        cards[idx]["strength"] = MAXSTAT
+    elif int(strengthinput.get()) ==  MINSTAT-1:
+        cards[idx]["strength"] = MINSTAT
     else:
         cards[idx]["strength"]= int(strengthinput.get())
 
-    if int(speedinput.get()) > 25:
-        cards[idx]["speed"] = 25
-    elif int(speedinput.get()) ==  0:
-        cards[idx]["speed"] = 1
+    if int(speedinput.get()) > MAXSTAT:
+        cards[idx]["speed"] = MAXSTAT
+    elif int(speedinput.get()) ==  MINSTAT-1:
+        cards[idx]["speed"] = MINSTAT
     else:
         cards[idx]["speed"]= int(speedinput.get())
     
-    if int(stealthinput.get()) > 25:
-        cards[idx]["stealth"] = 25
-    elif int(stealthinput.get()) ==  0:
-        cards[idx]["stealth"] = 1
+    if int(stealthinput.get()) > MAXSTAT:
+        cards[idx]["stealth"] = MAXSTAT
+    elif int(stealthinput.get()) ==  MINSTAT-1:
+        cards[idx]["stealth"] = MINSTAT
     else:
         cards[idx]["stealth"]= int(stealthinput.get())
     
-    if int(cunninginput.get()) > 25:
-        cards[idx]["cunning"] = 25
-    elif int(cunninginput.get()) ==  0:
-        cards[idx]["cunning"] = 1
+    if int(cunninginput.get()) > MAXSTAT:
+        cards[idx]["cunning"] = MAXSTAT
+    elif int(cunninginput.get()) ==  MINSTAT-1:
+        cards[idx]["cunning"] = MINSTAT
     else:
         cards[idx]["cunning"]= int(cunninginput.get())
 
@@ -126,6 +129,7 @@ def preview():
     #sets the name to the name and sets lock to false
     cards[idx]["name"] = nameinput.get()
     cards[idx]["lock"] = False
+    cards[idx]["image"] = imageselecter.get()
 
     #set the correct frame
     addframe.pack_forget()
@@ -154,6 +158,7 @@ def backedit():
 
 #goes to the card viewing frame
 def cardview():
+    global idx
     #loads the correct frame
     mainframe.pack_forget()
     main2frame.pack_forget()
@@ -167,7 +172,7 @@ def cardview():
     stealthviewoutput.config(text=cards[idx]["stealth"])
     cunningviewoutput.config(text=cards[idx]["cunning"])
     totalviewoutput.config(text=(cards[idx]["cunning"]+cards[idx]["stealth"]+cards[idx]["speed"]+cards[idx]["strength"]))
-
+    imageviewoutput.config(image=imagearrey[cards[idx]["image"]])
 
 def saving():
     previewframe.pack_forget()
@@ -204,7 +209,6 @@ def sort_cards(cards, stat, reverse=True):
     sorted_items = sorted(cards.values(), key=lambda x: x[stat], reverse=reverse)
     return {i: card for i, card in enumerate(sorted_items)}
 
-
 def sortpress():
     global sortcurrent
     for idx in cards:
@@ -229,14 +233,13 @@ def sorter():
     global cards
     print(sortcycles[sortcurrent-2])
     cards = sort_cards(cards,sortcycles[sortcurrent-2])
-    for idx in cards:
-        print(cards[idx])
-        buttons[idx].config(text=cards[idx]["name"])
-        buttons[idx].config(image=imagearrey[cards[idx]["image"]])
-
-    
-        
-
+    for id in cards:
+        print(cards[id],id)
+        buttons[id].config(text=cards[id]["name"])
+        buttons[id].config(image=imagearrey[cards[id]["image"]])
+    for id in range (len(cards), MAXCARDS):
+        print("clear",id)
+        buttons[id].config(image=imagearrey["empty"],text="empty")
 
 #code setup
 root.title("Monster Card Catalogue")
@@ -267,18 +270,30 @@ def imagecombo(event):
     previewimagelabel.config(image=imagearrey[imageselecter.get()])
 
 def printbutton():
-    with open("test.txt", "w") as f:
-       for each in cards:
-           f.write(f"{cards[each]}\n")
-    readfromfile()
+    global cards
+    with open("test.json", "w") as f:
+        json.dump(cards,f,indent=4)
+    with open("test.json", "r") as f:
+        cards = json.load(f)
+        print(cards)
+    temp = ""
+    mainframe.pack_forget()
+    main2frame.pack_forget()
+    frameoutput.pack(fill="both",expand=True)
+    for idx in cards:
+        temp += str(cards[idx]) + "\n"
+    outputlabel.config(text=temp)
 
-def readfromfile():
-    with open("test.txt", "r") as f:
-        for line in f: 
-            cards[f] = line
-
-
-
+def searchpress():
+    global idx
+    temp = searchbar.get()
+    for id in cards:
+        if cards[id]["name"] == temp:
+            print("found",id)
+            idx = id
+            cardview()
+            break
+    
 
 #code 
 mainframe = tk.Frame(root,bg="#1f57a2",width=670,height=220)
@@ -293,6 +308,14 @@ title.grid(row=0,column=0,columnspan=5)
 
 sortbutton = tk.Button(mainframe,text="sort",width=10,height=1,command=sortpress)
 sortbutton.grid(row=1,column=0)
+
+searchbar = tk.Entry(mainframe,width=12,font=("Anton",12,"bold"))
+searchbar.grid(row=1,column=3,)
+
+searchbutton = tk.Button(mainframe,width=10,font=("Anton",8,"bold"),text="Search",command=searchpress)
+searchbutton.grid(row=1,column=4)
+
+
 
 i=0
 for row in range(2):
@@ -311,17 +334,17 @@ for row in range(2):
         buttons.append(hold)
             
         i += 1 
-addcard = tk.Button(main2frame,text="add card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=addbutton)
+addcard = tk.Button(main2frame,text="Add card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=addbutton)
 addcard.grid(row=-0,column=0,padx=20,pady=10)
-removecard = tk.Button(main2frame,text="remove card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=deletecard)
+removecard = tk.Button(main2frame,text="Remove card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=deletecard)
 removecard.grid(row=0,column=1,padx=14,pady=10)
-editcard = tk.Button(main2frame,text="edit card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=editbutton)
+editcard = tk.Button(main2frame,text="Edit card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=editbutton)
 editcard.grid(row=0,column=2,padx=14,pady=10)
-viewcard = tk.Button(main2frame,text="view card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=cardview)
+viewcard = tk.Button(main2frame,text="View card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=cardview)
 viewcard.grid(row=0,column=3,padx=14,pady=10)
-selectedcard = tk.Label(main2frame,text="selected card\n",font=("Anton",8,"bold"),width=12,height=2)
+selectedcard = tk.Label(main2frame,text="SSelected card\n",font=("Anton",8,"bold"),width=12,height=2)
 selectedcard.grid(row=0,column=4,padx=12,pady=10)
-printcard = tk.Button(main2frame,text="print card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=printbutton)
+printcard = tk.Button(main2frame,text="Print card",width=10,height=2,relief='flat',font=("Anton",8,"bold"),command=printbutton)
 printcard.grid(row=0,column=5,padx=12,pady=10)
 
 addframe = tk.Frame(root,bg="#1f57a2",width=670,height=350)
@@ -333,7 +356,7 @@ imagelaabel = tk.Label(addframe,image=imagearrey["empty"])
 imagelaabel.place(x=120,y=130)
 
 combobox_options = list(imagearrey.keys())
-imageselecter = ttk.Combobox(addframe,values=combobox_options)
+imageselecter = ttk.Combobox(addframe,values=combobox_options,state="readonly")
 imageselecter.place(x=100,y=100)
 imageselecter.bind("<<ComboboxSelected>>", imagecombo)
 imageselecter.set("empty")
@@ -434,8 +457,12 @@ totalviewoutput = tk.Label(viewframe,bg="#1f57a2",font=("Anton",24,"bold"),text=
 totalviewoutput.place(x=450,y=250)
 backbutton = tk.Button(viewframe,text="Back to menu",width=10,height=1,relief='flat',font=("Anton",20,"bold"),command=backmenu)
 backbutton.place(x=250,y=290)
+imageviewoutput = tk.Label(viewframe,image=imagearrey["empty"])
+imageviewoutput.place(x=120,y=130)
 
+frameoutput = tk.Frame(root,bg="#1f57a2",width=670,height=350)
+outputlabel = tk.Label(frameoutput,bg="#1f57a2",font=("Anton",8,"bold"))
+outputlabel.pack()
 
 #code
-
 root.mainloop()
