@@ -1,12 +1,13 @@
 {
     "0": {
-        "name": "Vexscream",
-        "strength": 1,
-        "speed": 6,
-        "stealth": 21,
-        "cunning": 19,
+        "name": "Blazegolem",
+        "strength": 15,
+        "speed": 20,
+        "stealth": 23,
+        "cunning": 6,
         "lock": true,
-        "image": "vexscream"
+        "image": "blazegolem",
+        "total score": 64
     },
     "1": {
         "name": "Dawnmirage",
@@ -15,43 +16,48 @@
         "stealth": 18,
         "cunning": 22,
         "lock": true,
-        "image": "dawnmirage"
+        "image": "dawnmirage",
+        "total score": 60
     },
     "2": {
-        "name": "Blazegolem",
-        "strength": 15,
-        "speed": 20,
-        "stealth": 23,
-        "cunning": 6,
-        "lock": true,
-        "image": "blazegolem"
-    },
-    "3": {
         "name": "Moldvine",
         "strength": 21,
         "speed": 18,
         "stealth": 14,
         "cunning": 5,
         "lock": true,
-        "image": "moldvine"
+        "image": "moldvine",
+        "total score": 58
     },
-    "4": {
+    "3": {
         "name": "Vortexwing",
         "strength": 19,
         "speed": 13,
         "stealth": 19,
         "cunning": 2,
         "lock": true,
-        "image": "vortexwing"
+        "image": "vortexwing",
+        "total score": 53
     },
-    "5": {
+    "4": {
         "name": "Froststep",
         "strength": 14,
         "speed": 14,
         "stealth": 17,
         "cunning": 4,
         "lock": true,
-        "image": "froststep"
+        "image": "froststep",
+        "total score": 49
+    },
+    "5": {
+        "name": "Vexscream",
+        "strength": 1,
+        "speed": 6,
+        "stealth": 21,
+        "cunning": 19,
+        "lock": true,
+        "image": "vexscream",
+        "total score": 47
     },
     "6": {
         "name": "Wispghoul",
@@ -60,6 +66,17 @@
         "stealth": 3,
         "cunning": 2,
         "lock": true,
-        "image": "wispghoul"
+        "image": "wispghoul",
+        "total score": 41
+    },
+    "7": {
+        "name": "asd",
+        "strength": 25,
+        "speed": 1,
+        "stealth": 1,
+        "cunning": 1,
+        "total score": 28,
+        "image": "moldvine",
+        "lock": false
     }
 }
